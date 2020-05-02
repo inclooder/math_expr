@@ -1,15 +1,13 @@
 # MathExpression
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/math_expression`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Parses a mathematical expression from infix notation into reverse polish notation and produces a result.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'math_expression'
+gem 'math_expr'
 ```
 
 And then execute:
@@ -18,11 +16,21 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install math_expression
+    $ gem install math_expr
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'math_expression/parser'
+
+parser = MathExpression::Parser.new('4 + 5')
+
+parser.to_tokens # => [{:type=>:number, :value=>4}, {:type=>:operator, :value=>"+"}, {:type=>:number, :value=>5}]
+
+parser.to_postfix # => [4, 5, "+"]
+
+parser.evaluate # => 9
+```
 
 ## Development
 
