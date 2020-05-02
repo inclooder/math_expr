@@ -11,7 +11,7 @@ class MathExpression::Parser
 
     form_number = lambda do
       return if reading_number.empty?
-      num = reading_number.join.to_i
+      num = reading_number.join.to_f
       tokens << { type: :number, value: num }
       reading_number = []
     end
@@ -63,9 +63,10 @@ class MathExpression::Parser
       when '*'
         stack.pop * stack.pop
       when '/'
-        stack.pop / stack.pop
+        first, second = stack.pop, stack.pop
+        second / first
       else
-        token.to_i
+        token.to_f
       end
       stack.push(result)
     end
@@ -74,19 +75,19 @@ class MathExpression::Parser
 
   private
 
-  OPERATORS = %w(+ - * /).freeze
+  OPERATORS = {
+    '+' => 2,
+    '-' => 2,
+    '*' => 3,
+    '/' => 3,
+  }.freeze
 
   def operator?(token)
-    OPERATORS.include?(token)
+    OPERATORS.keys.include?(token)
   end
 
   def operator_precedence(operator)
-    {
-      '+' => 2,
-      '-' => 2,
-      '*' => 3,
-      '/' => 3,
-    }.fetch(operator)
+    OPERATORS.fetch(operator)
   end
 
   attr_reader :expression

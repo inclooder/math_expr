@@ -36,7 +36,7 @@ describe MathExpression::Parser do
     end
   end
 
-  context 'for long expression' do
+  context 'for expression with different precedence operators' do
     let(:expression) { '1 + 4 + 5 - 6 * 2' }
 
     describe '#to_postfix' do
@@ -52,6 +52,22 @@ describe MathExpression::Parser do
 
       it 'returns postfix notation' do
         expect(subject).to eq(-2)
+      end
+    end
+  end
+
+  describe '#evaluate' do
+    it 'handles simple expressions' do
+      {
+        '1 + 1' => 2,
+        '2 + 3' => 5,
+        '123 + 999' => 1122,
+        '54-1' => 53,
+        '23-100' => -77,
+        '6/  2' => 3,
+        '3 / 2' => 1.5
+      }.each do |input, result|
+        expect(described_class.new(input).evaluate).to eq(result)
       end
     end
   end
