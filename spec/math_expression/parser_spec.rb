@@ -1,6 +1,6 @@
-require_relative '../lib/expression_parser'
+require 'math_expression/parser'
 
-describe ExpressionParser do
+describe MathExpression::Parser do
   let(:expression) { 'a + b * c' }
   let(:parser) { described_class.new(expression) }
 

@@ -1,4 +1,6 @@
-class ExpressionParser
+# frozen_string_literal: true
+
+class MathExpression::Parser
   def initialize(expression)
     @expression = expression
   end
