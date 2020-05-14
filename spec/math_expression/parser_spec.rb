@@ -57,7 +57,7 @@ describe MathExpression::Parser do
   end
 
   describe '#evaluate' do
-    it 'handles simple expressions' do
+    it 'handles expressions with one operator' do
       {
         '1 + 1' => 2,
         '2 + 3' => 5,
@@ -66,6 +66,17 @@ describe MathExpression::Parser do
         '23-100' => -77,
         '6/  2' => 3,
         '3 / 2' => 1.5
+      }.each do |input, result|
+        expect(described_class.new(input).evaluate).to eq(result)
+      end
+    end
+
+    it 'handles expressions with many operators' do
+      {
+        '1 + 1 + 2' => 4,
+        '2 + 3 - 23' => -18,
+        '123 + 999 / 111' => 132,
+        '2 + 1 + 33 / 3' => 14,
       }.each do |input, result|
         expect(described_class.new(input).evaluate).to eq(result)
       end
