@@ -43,7 +43,7 @@ describe MathExpression::Parser do
       subject { parser.to_postfix }
 
       it 'returns postfix notation' do
-         expect(subject).to eq([1, 4, '+', 5, '+', 6, 2, '*', '-'])
+        expect(subject).to eq([1.0, 4.0, 5.0, 6.0, 2.0, '*', '-', '+', '+'])
       end
     end
 
@@ -77,6 +77,16 @@ describe MathExpression::Parser do
         '2 + 3 - 23' => -18,
         '123 + 999 / 111' => 132,
         '2 + 1 + 33 / 3' => 14,
+      }.each do |input, result|
+        expect(described_class.new(input).evaluate).to eq(result)
+      end
+    end
+
+    it 'handles expressions with parenthesis' do
+      {
+        '(2 + 2) * 2' => 8,
+        '16 / (2 + 2) * 2' => 2,
+        '(1 + (2 + 2)) * 2' => 10,
       }.each do |input, result|
         expect(described_class.new(input).evaluate).to eq(result)
       end

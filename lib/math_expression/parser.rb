@@ -16,10 +16,15 @@ class MathExpression::Parser
       reading_number = []
     end
 
-    expression.chars.each do |character|
+    printable_chars = expression.chars.reject { |c| c == ' ' }
+
+    printable_chars.each do |character|
       if operator?(character)
         form_number.call
-        tokens << { type: :operator, value: character}
+        tokens << { type: :operator, value: character }
+      elsif parenthesis?(character)
+        form_number.call
+        tokens << { type: :parenthesis, value: character }
       else
         reading_number << character
       end
@@ -33,19 +38,33 @@ class MathExpression::Parser
     operator_stack = []
 
     to_tokens.each do |token|
-      case token[:type]
+      type, value = token[:type], token[:value]
+
+      case type
       when :number
-        output_queue << token[:value]
+        output_queue << value
       when :operator
         loop do
           break if operator_stack.empty?
+          break if left_parenthesis?(operator_stack.last)
           operator_on_stack_precedence = operator_precedence(operator_stack.last)
-          current_operator_precedence = operator_precedence(token[:value])
-          break if operator_on_stack_precedence < current_operator_precedence
+          current_operator_precedence = operator_precedence(value)
+          break if operator_on_stack_precedence <= current_operator_precedence
 
           output_queue << operator_stack.pop
         end
-        operator_stack.push(token[:value])
+        operator_stack.push(value)
+      when :parenthesis
+        if left_parenthesis?(value)
+          operator_stack.push(value)
+        else
+          while !left_parenthesis?(operator_stack.last)
+            output_queue << operator_stack.pop
+          end
+          if left_parenthesis?(operator_stack.last)
+            operator_stack.pop
+          end
+        end
       end
     end
     (output_queue + operator_stack.reverse)
@@ -88,6 +107,18 @@ class MathExpression::Parser
 
   def operator_precedence(operator)
     OPERATORS.fetch(operator)
+  end
+
+  def parenthesis?(token)
+    left_parenthesis?(token) || right_parenthesis?(token)
+  end
+
+  def left_parenthesis?(token)
+    token == '('
+  end
+
+  def right_parenthesis?(token)
+    token == ')'
   end
 
   attr_reader :expression
