@@ -13,7 +13,7 @@ describe MathExpression::Parser do
       it 'returns the correct tokens' do
         expect(subject).to eq([
           { type: :number, value: 4 },
-          { type: :operator, value: '+' },
+          { type: :operator, value: '+', precedence: 2 },
           { type: :number, value: 5 },
         ])
       end
