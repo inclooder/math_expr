@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    math_expr (0.1.0)
+    math_expr (0.1.2)
 
 GEM
   remote: https://rubygems.org/

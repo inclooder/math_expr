@@ -1,4 +1,4 @@
-# MathExpression
+# MathExpr
 
 Parses a mathematical expression from infix notation into reverse polish notation and produces a result.
 
