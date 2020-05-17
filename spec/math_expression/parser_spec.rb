@@ -87,6 +87,7 @@ describe MathExpression::Parser do
         '(2 + 2) * 2' => 8,
         '16 / (2 + 2) * 2' => 2,
         '(1 + (2 + 2)) * 2' => 10,
+        '2 / (4 + 8) * 3' => 2 / 36.0,
       }.each do |input, result|
         expect(described_class.new(input).evaluate).to eq(result)
       end
